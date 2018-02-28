@@ -40,6 +40,7 @@ class PortHandlerArduino : public PortHandler
   int     socket_fd_;
   int     baudrate_;
   char    port_name_[100];
+  bool    port_open_;
 
   double  packet_start_time_;
   double  packet_timeout_;
@@ -47,6 +48,12 @@ class PortHandlerArduino : public PortHandler
 
 #if defined(__OPENCM904__)
   UARTClass *p_dxl_serial;
+#elif defined(ARDUINO)  
+  Stream    *p_dxl_serial;
+  int       pin_tx_enable;
+#if defined(KINETISK) || defined(KINETISL)  // Teensy 3.x and LC
+ volatile uint8_t *puart_C3_;    // pointer to register to use to switch between TX and RX mode
+#endif
 #endif
 
   bool    setupPort(const int cflag_baud);
@@ -175,6 +182,20 @@ class PortHandlerArduino : public PortHandler
   /// @description The function checks whether current time is passed by the time of packet timeout from the time set by PortHandlerArduino::setPacketTimeout().
   ////////////////////////////////////////////////////////////////////////////////
   bool    isPacketTimeout();
+
+  ////////////////////////////////////////////////////////////////////////////////
+  /// @brief The function sets an optional TX enable pin 
+  /// @description The function sets an optional TX enable pin.  This is used by some controllers to control
+  /// @description an external RS485 chip or TTL buffer chips to set the direction of the DXL buss
+  /// @param pin Arduino pin number to use. 
+  ////////////////////////////////////////////////////////////////////////////////
+  bool    setTXEnablePin(int pin);
+
+  ////////////////////////////////////////////////////////////////////////////////
+  /// @brief returns optional TX Eanble pin number
+  /// @description returns previously set value or -1 if not used. 
+  ///////////////////////////////////////////////////////////////////////////////
+  int    getTXEnablePin();
 };
 
 }

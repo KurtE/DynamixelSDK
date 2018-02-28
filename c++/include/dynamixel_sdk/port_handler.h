@@ -169,6 +169,20 @@ class WINDECLSPEC PortHandler
   /// @description The function checks whether current time is passed by the time of packet timeout from the time set by PortHandlerLinux::setPacketTimeout().
   ////////////////////////////////////////////////////////////////////////////////
   virtual bool    isPacketTimeout() = 0;
+
+  ////////////////////////////////////////////////////////////////////////////////
+  /// @brief The function sets an optional TX enable pin 
+  /// @description The function sets an optional TX enable pin.  This is used by some controllers to control
+  /// @description an external RS485 chip or TTL buffer chips to set the direction of the DXL buss
+  /// @param pin Arduino pin number to use. 
+  ////////////////////////////////////////////////////////////////////////////////
+  virtual bool    setTXEnablePin(int pin) = 0;
+
+  ////////////////////////////////////////////////////////////////////////////////
+  /// @brief returns optional TX Eanble pin number
+  /// @description returns previously set value or -1 if not used. 
+  ///////////////////////////////////////////////////////////////////////////////
+  virtual int    getTXEnablePin() = 0;
 };
 
 }
